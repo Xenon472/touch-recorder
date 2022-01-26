@@ -81,6 +81,19 @@ public class NamesManager {
         return sessionDirectory;
     }
 
+    public static File sessionDirectorySpeed(SessionData data, int item_index, String timestamp)
+    {
+        File base = baseDirectory();
+
+        String firstFolder = DataProvider.getInstance().getItems_provider().getNormalized(item_index) + SEPARATOR + "Velocity";
+        String secondFolder = normalize(data.name) + SEPARATOR +
+                normalize(data.surname) + SEPARATOR + timestamp;
+        File sessionDirectory = new File(new File(base, firstFolder), secondFolder);
+        sessionDirectory.mkdirs();
+
+        return sessionDirectory;
+    }
+
     public static synchronized void  scanFile(Activity activity, File path) {
         activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(path)));
     }

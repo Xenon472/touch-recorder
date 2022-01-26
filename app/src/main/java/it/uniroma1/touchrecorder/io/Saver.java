@@ -15,11 +15,13 @@ import java.io.IOException;
 import java.io.Writer;
 
 import it.uniroma1.touchrecorder.data.ItemData;
+import it.uniroma1.touchrecorder.data.ItemDataSpeed;
 
 public class Saver {
 
     public static File saveItemData(final ItemData itemData, String timestamp) {
         File p = NamesManager.sessionDirectory(itemData.session_data, itemData.item_index, timestamp);
+        File pS = NamesManager.sessionDirectorySpeed(itemData.session_data, itemData.item_index, timestamp);
         final String name = NamesManager.getJsonName(itemData);
         final File path = new File(p, name);
 
@@ -32,6 +34,20 @@ public class Saver {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        /* addon to save the speed json */
+        final File pathS = new File(pS, name);
+        try (Writer writer = new BufferedWriter(new FileWriter(pathS))) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            ItemDataSpeed IDS = new ItemDataSpeed(itemData);
+            gson.toJson(IDS, writer);
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return path;
     }
 
